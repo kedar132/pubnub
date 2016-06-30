@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <title>Subscribe-Event</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">
+
+        var eventLoc1 = "";
+        var PUBNUB_demo = PUBNUB.init({
+        publish_key: 'pub-c-5d3cd34b-cd91-4f00-982e-714abb7f7886',
+        subscribe_key: 'sub-c-79efdadc-f6f1-11e5-8b0b-0619f8945a4f'
+                                    });
+    
+   function here_now(){
+   PUBNUB_demo.here_now({
+   channel: eventLoc1,
+   state: true,
+   callback: function(msg) {
+   document.getElementById("occupancy_no").innerHTML=msg.occupancy;
+   console.log(msg.occupancy);
+                           }
+
+                    });
+                }
+
+// histroy
+function history(){
+PUBNUB_demo.history({
+channel : eventLoc1,
+count : 100,
+callback : function(m){
+console.log(m);
+arrayValue = m[0];
+for(var i=0;i<arrayValue.length;i++)
+appendEven(arrayValue[i].name,arrayValue[i].desc,arrayValue[i].date,arrayValue[i].month);
+                        }
+
+});
+document.getElementById("history").innerHTML="";
+arrayValue[0]
+}
+$(function(){
+
+    $(".dropdown-menu li a").click(function(){
+
+    $(".btn span:first-child").text($(this).text());
+    $(".btn span:first-child").val($(this).text());
+    eventLoc1 = $(".btn span:first-child").val();
+    document.getElementById("evenList").innerHTML=""
+    document.getElementById("history").innerHTML=`<div class="container">
+        <h3 style="color:white;font-size:18px;width:10%">view previous events in this channel<h3>
+            <button onclick="history()"type="button" class="btn btn-info btn-sm">HISTORY</button>      
+</div>`;
+
+      PUBNUB_demo.subscribe({
+      channel: eventLoc1,
+      noheresync: true,
+      message: function(m){
+      console.log(m);
+      appendEven(m.name,m.desc,m.date,m.month);
+      },
+
+      presence: function(m) {
+       console.log(m);
+                            },
+
+      state: {
+          name: 'presence-tutorial-user',
+          timestamp: new Date()
+            }
+    });
+         
+   setInterval(here_now, 300);
+
+});
+});
+</script>
+    
+<style type="text/css">
+    body{
+    background: url(http://mymaplist.com/img/parallax/back.png);
+	background-color: #444;
+    background: url(http://mymaplist.com/img/parallax/pinlayer2.png),url(http://mymaplist.com/img/parallax/pinlayer1.png),url(http://mymaplist.com/img/parallax/back.png);    
+        }
+
+    .vertical-offset-100{
+    padding-top:100px;
+                        }
+    #nme{
+        color: tomato;
+        float: right;
+        }
+
+ 
+
+   
+    @import url("http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,400italic");
+    @import url("//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css");
+    body {
+        padding: 60px 0px;
+        background-color: rgb(220, 220, 220);
+        }
+    
+    .event-list {
+        list-style: none;
+        font-family: 'Lato', sans-serif;
+        margin: 0px;
+        padding: 0px;
+                }
+    .event-list > li {
+        background-color: rgb(255, 255, 255);
+        box-shadow: 0px 0px 5px rgb(51, 51, 51);
+        box-shadow: 0px 0px 5px rgba(51, 51, 51, 0.7);
+        padding: 0px;
+        margin: 0px 0px 20px;
+                    }
+    .event-list > li > time {
+        display: inline-block;
+        width: 100%;
+        color: rgb(255, 255, 255);
+        background-color: rgb(197, 44, 102);
+        padding: 5px;
+        text-align: center;
+        text-transform: uppercase;
+                            }
+    .event-list > li:nth-child(even) > time {
+        background-color: rgb(165, 82, 167);
+                                            }
+    .event-list > li > time > span {
+        display: none;
+                                    }
+    .event-list > li > time > .day {
+        display: block;
+        font-size: 56pt;
+        font-weight: 100;
+        line-height: 1;
+                                     }
+    .event-list > li time > .month {
+        display: block;
+        font-size: 24pt;
+        font-weight: 900;
+        line-height: 1;
+                                     }
+    .event-list > li > img {
+        width: 100%;
+                            }
+    .event-list > li > .info {
+        padding-top: 5px;
+        text-align: center;
+                             }
+    .event-list > li > .info > .title {
+        font-size: 17pt;
+        font-weight: 700;
+        margin: 0px;
+                                    }
+    .event-list > li > .info > .desc {
+        font-size: 13pt;
+        font-weight: 300;
+        margin: 0px;
+                                     }
+    .event-list > li > .info > ul,
+    .event-list > li > .social > ul {
+        display: table;
+        list-style: none;
+        margin: 10px 0px 0px;
+        padding: 0px;
+        width: 100%;
+        text-align: center;
+                                     }
+    .event-list > li > .social > ul {
+        margin: 0px;
+                                    }
+    .event-list > li > .info > ul > li,
+    .event-list > li > .social > ul > li {
+        display: table-cell;
+        cursor: pointer;
+        color: rgb(30, 30, 30);
+        font-size: 11pt;
+        font-weight: 300;
+        padding: 3px 0px;
+                                        }
+    .event-list > li > .info > ul > li > a {
+        display: block;
+        width: 100%;
+        color: rgb(30, 30, 30);
+        text-decoration: none;
+                                         } 
+    .event-list > li > .social > ul > li {    
+        padding: 0px;
+                                         }
+    .event-list > li > .social > ul > li > a {
+        padding: 3px 0px;
+                                             } 
+    .event-list > li > .info > ul > li:hover,
+    .event-list > li > .social > ul > li:hover {
+        color: rgb(30, 30, 30);
+        background-color: rgb(200, 200, 200);
+    }
+    .facebook a,
+    .twitter a,
+    .google-plus a {
+        display: block;
+        width: 100%;
+        color: rgb(75, 110, 168) !important;
+    }
+    .twitter a {
+        color: rgb(79, 213, 248) !important;
+    }
+    .google-plus a {
+        color: rgb(221, 75, 57) !important;
+    }
+    .facebook:hover a {
+        color: rgb(255, 255, 255) !important;
+        background-color: rgb(75, 110, 168) !important;
+    }
+    .twitter:hover a {
+        color: rgb(255, 255, 255) !important;
+        background-color: rgb(79, 213, 248) !important;
+    }
+    .google-plus:hover a {
+        color: rgb(255, 255, 255) !important;
+        background-color: rgb(221, 75, 57) !important;
+    }
+
+    @media (min-width: 768px) {
+        .event-list > li {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 120px;
+            padding: 0px;
+        }
+        .event-list > li > time,
+        .event-list > li > img  {
+            display: inline-block;
+        }
+        .event-list > li > time,
+        .event-list > li > img {
+            width: 120px;
+            float: left;
+        }
+        .event-list > li > .info {
+            background-color: rgb(245, 245, 245);
+            overflow: hidden;
+        }
+        .event-list > li > time,
+        .event-list > li > img {
+            width: 120px;
+            height: 120px;
+            padding: 0px;
+            margin: 0px;
+        }
+        .event-list > li > .info {
+            position: relative;
+            height: 120px;
+            text-align: left;
+            padding-right: 40px;
+        }   
+        .event-list > li > .info > .title, 
+        .event-list > li > .info > .desc {
+            padding: 0px 10px;
+        }
+        .event-list > li > .info > ul {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+        }
+        .event-list > li > .social {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            display: block;
+            width: 40px;
+        }
+        .event-list > li > .social > ul {
+            border-left: 1px solid rgb(230, 230, 230);
+        }
+        .event-list > li > .social > ul > li {          
+            display: block;
+            padding: 0px;
+        }
+        .event-list > li > .social > ul > li > a {
+            display: block;
+            width: 40px;
+            padding: 10px 0px 9px;
+        }
+    }
+    </style>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+  
+</head>
+<body>
+<script src="http://mymaplist.com/js/vendor/TweenLite.min.js"></script>
+<div class="container">
+        <div class="row" style="margin-left:98px">
+            <div class="[ col-xs-12 col-sm-offset-2 col-sm-8 ]">
+                <h2 style="color:white;">Select the Genre you want to Subscribe</h2>
+                <div class="form-group" style="width:17%;margin-right:0;margin-left:32%">
+                      <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          <span>Location</span> 
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                          <li><a href="#">Bike</a></li>
+                          <li><a href="#">Hike</a></li>
+                          <li><a href="#">Music</a></li>
+                        </ul>
+                    </div>
+              </div>      
+            </div>
+        </div>
+    </div>
+    <div id="occupancy" style="width:10%;margin-left:2%">
+        <h3 style="color:white;font-size:18px">Number of users currently subscribed to this location</h3>
+        <p id="occupancy_no" style="color:white;font-size:68px;margin-left:20%"></p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="[ col-xs-12 col-sm-offset-2 col-sm-8 ]">
+                
+                <ul class="event-list" id="evenList">
+                
+
+                   
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $(document).mousemove(function(e){
+     TweenLite.to($('body'), 
+        .5, 
+        { css: 
+            {
+                backgroundPosition: ""+ parseInt(event.pageX/8) + "px "+parseInt(event.pageY/'12')+"px, "+parseInt(event.pageX/'15')+"px "+parseInt(event.pageY/'15')+"px, "+parseInt(event.pageX/'30')+"px "+parseInt(event.pageY/'30')+"px"
+            }
+        });
+  });
+});
+</script>
+<script>
+
+function appendEven(name,desc,date,month)
+{
+    
+    var data = `<li>
+                    <time datetime="2014-07-20">
+                        <span class="day">`+date+`</span>
+                        <span class="month">`+month+`</span>
+                    </time>
+                        <img alt="Independence Day" src="http://www.gobreck.com/sites/default/files/styles/secondary_hero/public/IMG_9830.JPG" />
+                            <div class="info">
+                                <h2 class="title">`+name+`</h2>
+                                <p class="desc">`+desc+`</p>
+                            </div>
+                       
+                </li>`;
+    
+   
+     document.getElementById("evenList").innerHTML+=data;
+   
+}
+</script>
+<div id="history" style="width:5%;margin-left:1%;float:left">
+<div class="container">
+<h3 style="color:white;font-size:18px;width:10%">view previous events in this channel<h3>
+  <button onclick="history()"type="button" class="btn btn-info btn-sm">HISTORY</button>      
+</div>
+</div>
+
+</body>
+</html>
